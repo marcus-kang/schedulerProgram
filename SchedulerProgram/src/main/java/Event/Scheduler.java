@@ -12,7 +12,7 @@ public class Scheduler {
 	public void processCommand() {
 		kb = new Scanner( System.in );
 		while(true) {
-			System.out.println("$ ");
+			System.out.print("$ ");
 			String command = kb.next();
 			if(command.equals("addevent")) {
 				String type = kb.next();
@@ -25,13 +25,22 @@ public class Scheduler {
 			}else if(command.equals("list")) {
 				handleList();
 			}else if(command.equals("show")) {
-				
+				handleShow();
 			}else if(command.equals("exit"))
 				break;
 		}
 		kb.close();
 	}
 	
+	private void handleShow() {
+		String dateString = kb.next();
+		MyDate theDate = parseDateString(dateString);
+		for(int i=0; i<n; i++) {
+			if(events[i].isRelevant(theDate))
+				System.out.println(events[i].toString());
+		}
+	}
+
 	private void handleList() {
 		for(int i=0; i<n; i++) {
 			System.out.println("   "+events[i].toString());

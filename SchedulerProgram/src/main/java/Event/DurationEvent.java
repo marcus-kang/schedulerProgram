@@ -10,6 +10,10 @@ public class DurationEvent extends Event{
 		end = e;
 	}
 	
+	public boolean isRelevant(MyDate date) {
+		return begin.compareTo(date) <= 0 && end.compareTo(date) >= 0;
+	}
+	
 	public String toString() {
 		return title + ", " + begin.toString() + "~" + end.toString();
 	}
