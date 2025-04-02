@@ -1,5 +1,6 @@
 package Event;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Scheduler {
@@ -26,6 +27,8 @@ public class Scheduler {
 				handleList();
 			}else if(command.equals("show")) {
 				handleShow();
+			}else if(command.equals("sort")) {
+				Arrays.sort( events, 0, n );
 			}else if(command.equals("exit"))
 				break;
 		}
@@ -48,13 +51,31 @@ public class Scheduler {
 	}
 
 	private void handleAddDeadlinedEvent() {
-		// TODO Auto-generated method stub
+		System.out.println(" when: ");
+		String dateString = kb.next();
+		System.out.println(" title: ");
+		String title = kb.next();
+		
+		MyDate date = parseDateString(dateString);
+		DeadlinedEvent ev = new DeadlinedEvent(title, date);
+		
+		addEvent(ev);
 		
 	}
 
 	private void handleAddDurationEvent() {
-		// TODO Auto-generated method stub
+		System.out.println(" begin: ");
+		String beginString = kb.next();
+		System.out.println(" end: ");
+		String endString = kb.next();
+		System.out.println(" title: ");
+		String title = kb.next();
 		
+		MyDate begin = parseDateString(beginString);
+		MyDate end = parseDateString(endString);
+		DurationEvent ev = new DurationEvent(title, begin, end);
+		
+		addEvent(ev);
 	}
 
 	private void handleAddOneDayEvent() {

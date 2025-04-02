@@ -17,4 +17,8 @@ public class DurationEvent extends Event{
 	public String toString() {
 		return title + ", " + begin.toString() + "~" + end.toString();
 	}
+	
+	public MyDate getRepresentativeDate () {
+		return begin;
+	}
 }

@@ -15,4 +15,8 @@ public class OneDayEvent extends Event{
 	public String toString() {
 		return title + ", " + date.toString();
 	}
+	
+	public MyDate getRepresentativeDate () {
+		return date;
+	}
 }
