@@ -2,6 +2,7 @@ package KWLinkedList;
 
 import java.util.Iterator;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 public class KWLinkedList<E> {
 	
@@ -24,11 +25,11 @@ public class KWLinkedList<E> {
 		return new KWListIterator(0);
 	}
 	
-	public ListIterator<E> listiterator(){
+	public ListIterator<E> listIterator(){
 		return new KWListIterator(0);
 	}
 	
-	public ListIterator<E> listiterator(int index){
+	public ListIterator<E> listIterator(int index){
 		return new KWListIterator(index);
 	}
 	
@@ -39,44 +40,62 @@ public class KWLinkedList<E> {
 		private Node<E> lastItemReturned;
 		private int index;
 		
-		public KWListIterator(int index) {
-			
+		public KWListIterator(int i) {
+			if(i<0 || i>size)
+				throw new IndexOutOfBoundsException("Invalid index " + i);
+			lastItemReturned = null;
+			if(i == size) {
+				index = size;
+				nextItem = null;
+			}
+			else {
+				nextItem = head;
+				for(index = 0; index < i; index++)
+					nextItem = nextItem.next;
+			}
 		}
 
 		@Override
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
+			return nextItem != null;
 		}
 
 		@Override
 		public E next() {
-			// TODO Auto-generated method stub
-			return null;
+			if(!hasNext())
+				throw new NoSuchElementException();
+			lastItemReturned = nextItem;
+			nextItem = nextItem.next;
+			index++;
+			return lastItemReturned.data;
 		}
 
 		@Override
 		public boolean hasPrevious() {
-			// TODO Auto-generated method stub
-			return false;
+			return (nextItem == null && size != 0) || nextItem.prev != null;
 		}
 
 		@Override
 		public E previous() {
-			// TODO Auto-generated method stub
-			return null;
+			if(!hasPrevious())
+				throw new NoSuchElementException();
+			if(nextItem != null)
+				nextItem = tail;
+			else
+				nextItem = nextItem.prev;
+			lastItemReturned = nextItem;
+			index--;
+			return lastItemReturned.data;
 		}
 
 		@Override
 		public int nextIndex() {
-			// TODO Auto-generated method stub
-			return 0;
+			return index;
 		}
 
 		@Override
 		public int previousIndex() {
-			// TODO Auto-generated method stub
-			return 0;
+			return index-1;
 		}
 
 		@Override
@@ -93,27 +112,61 @@ public class KWLinkedList<E> {
 
 		@Override
 		public void add(E e) {
-			// TODO Auto-generated method stub
-			
+			if(head == null) {
+				head = new Node<E>(e);
+				tail = head;
+			}
+			else if(nextItem == head) {
+				Node<E> newNode = new Node<E>(e);
+				newNode.next = nextItem;
+				nextItem.prev = newNode;
+				head = newNode;
+			}
+			else if(nextItem == null) {
+				Node<E> newNode = new Node<E>(e);
+				tail.next = newNode;
+				newNode.prev = tail;
+				tail = newNode;
+			}
+			else {
+				Node<E> newNode = new Node<E>(e);
+				newNode.prev = nextItem.prev;
+				nextItem.prev.next = newNode;
+				newNode.next = nextItem;
+				nextItem.prev = newNode;
+			}
+			size++;
+			index++;
 		}
 		
 	}
 	
 	public int indexOf(E item) {
-		
-		return 0;
+		Node<E> p = head;
+		int index = 0;
+		while(p != null) {
+			if(p.data.equals(item))
+				return index;
+			p = p.next;
+			index++;
+		}
+		return -1;
 	}
 	
 	public void add(int index, E item) {
-		
+		listIterator(index).add(item);
 	}
 	
 	public E get(int index) {
-		
-		return null;
+		return listIterator(index).next();
 	}
-	public boolean remove(int index) {
-		return true;
+	public E remove(int index) {
+		if(index < 0 || index >= size)
+			throw new IndexOutOfBoundsException();
+		ListIterator<E> iter = listIterator(index);
+		E result = iter.next();
+		iter.remove();
+		return result;
 	}
 	
 	public void remove(E obj) {
